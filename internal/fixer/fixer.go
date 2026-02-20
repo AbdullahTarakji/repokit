@@ -30,6 +30,43 @@ type TemplateData struct {
 	Languages   []string
 }
 
+// DryRun returns the list of files that would be created without writing them.
+func DryRun(result *analyzer.AnalysisResult) ([]string, error) {
+	var files []string
+	if !result.HasLicense {
+		files = append(files, "LICENSE")
+	}
+	if !result.HasGitignore {
+		files = append(files, ".gitignore")
+	}
+	if !result.HasContributing {
+		files = append(files, "CONTRIBUTING.md")
+	}
+	if !result.HasChangelog {
+		files = append(files, "CHANGELOG.md")
+	}
+	if !result.HasCodeOfConduct {
+		files = append(files, "CODE_OF_CONDUCT.md")
+	}
+	if !result.HasSecurity {
+		files = append(files, "SECURITY.md")
+	}
+	if !result.HasEditorconfig {
+		files = append(files, ".editorconfig")
+	}
+	if len(result.CIFiles) == 0 {
+		files = append(files, filepath.Join(".github", "workflows", "ci.yml"))
+	}
+	if len(result.IssueTemplates) == 0 {
+		files = append(files, filepath.Join(".github", "ISSUE_TEMPLATE", "bug_report.md"))
+		files = append(files, filepath.Join(".github", "ISSUE_TEMPLATE", "feature_request.md"))
+	}
+	if !result.HasPRTemplate {
+		files = append(files, filepath.Join(".github", "pull_request_template.md"))
+	}
+	return files, nil
+}
+
 // Fix applies fixes based on analysis results.
 func Fix(result *analyzer.AnalysisResult, repoPath string) (*FixResult, error) {
 	fr := &FixResult{}

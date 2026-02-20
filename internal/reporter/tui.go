@@ -40,10 +40,12 @@ func NewModel(report *scorer.ScoreReport, repoName string) Model {
 	return Model{Report: report, RepoName: repoName}
 }
 
+// Init implements tea.Model.
 func (m Model) Init() tea.Cmd {
 	return nil
 }
 
+// Update implements tea.Model and handles key events.
 func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
 	case tea.KeyMsg:
@@ -56,6 +58,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	return m, nil
 }
 
+// View implements tea.Model and renders the health report.
 func (m Model) View() string {
 	if m.quitting {
 		return ""

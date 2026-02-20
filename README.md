@@ -6,6 +6,8 @@
 
 A CLI tool that audits GitHub repositories for health and quality, assigns a score (0-100), and can auto-fix missing files.
 
+![Demo](docs/demo.gif)
+
 ## Installation
 
 ```bash
@@ -24,22 +26,22 @@ make build
 
 ```bash
 # Scan current directory (TUI mode)
-repokit
+repokit scan .
 
-# Scan a specific path
-repokit /path/to/repo
-
-# Plain text output
-repokit --format text
+# Scan with plain text output
+repokit scan --format text .
 
 # JSON output (great for CI)
-repokit --format json
+repokit scan --format json .
 
 # Auto-fix missing files
-repokit --fix
+repokit fix .
 
-# Fix without prompts
-repokit --fix --yes
+# Preview what would be fixed (dry run)
+repokit fix --dry-run .
+
+# Legacy: scan and fix in one command
+repokit --fix --yes /path/to/repo
 
 # Print version
 repokit version

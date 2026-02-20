@@ -151,6 +151,74 @@ func TestGitignoreTemplate(t *testing.T) {
 	}
 }
 
+func TestFix_AllFilesExist(t *testing.T) {
+	dir := t.TempDir()
+
+	// Create all files that Fix would generate
+	os.WriteFile(filepath.Join(dir, "LICENSE"), []byte("x"), 0o644)
+	os.WriteFile(filepath.Join(dir, ".gitignore"), []byte("x"), 0o644)
+	os.WriteFile(filepath.Join(dir, "CONTRIBUTING.md"), []byte("x"), 0o644)
+	os.WriteFile(filepath.Join(dir, "CHANGELOG.md"), []byte("x"), 0o644)
+	os.WriteFile(filepath.Join(dir, "CODE_OF_CONDUCT.md"), []byte("x"), 0o644)
+	os.WriteFile(filepath.Join(dir, "SECURITY.md"), []byte("x"), 0o644)
+	os.WriteFile(filepath.Join(dir, ".editorconfig"), []byte("x"), 0o644)
+	os.MkdirAll(filepath.Join(dir, ".github", "workflows"), 0o755)
+	os.WriteFile(filepath.Join(dir, ".github", "workflows", "ci.yml"), []byte("x"), 0o644)
+	os.MkdirAll(filepath.Join(dir, ".github", "ISSUE_TEMPLATE"), 0o755)
+	os.WriteFile(filepath.Join(dir, ".github", "ISSUE_TEMPLATE", "bug_report.md"), []byte("x"), 0o644)
+	os.WriteFile(filepath.Join(dir, ".github", "pull_request_template.md"), []byte("x"), 0o644)
+
+	result := &analyzer.AnalysisResult{
+		RepoPath:       dir,
+		RepoName:       "test",
+		HasLicense:     true,
+		HasGitignore:   true,
+		HasContributing: true,
+		HasChangelog:   true,
+		HasCodeOfConduct: true,
+		HasSecurity:    true,
+		HasEditorconfig: true,
+		CIFiles:        []string{"ci.yml"},
+		IssueTemplates: []string{"bug_report.md"},
+		HasPRTemplate:  true,
+		Languages:      []string{"Go"},
+	}
+
+	fr, err := Fix(result, dir)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(fr.FilesCreated) != 0 {
+		t.Errorf("expected no files created when all exist, got: %v", fr.FilesCreated)
+	}
+	if len(fr.Errors) != 0 {
+		t.Errorf("expected no errors, got: %v", fr.Errors)
+	}
+}
+
+func TestFix_TypeScriptUsesNodeTemplates(t *testing.T) {
+	dir := t.TempDir()
+	result := &analyzer.AnalysisResult{
+		RepoPath:  dir,
+		RepoName:  "ts-project",
+		Languages: []string{"TypeScript"},
+	}
+
+	fr, err := Fix(result, dir)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(fr.FilesCreated) == 0 {
+		t.Error("expected files to be created")
+	}
+
+	// .gitignore should have node_modules
+	data, _ := os.ReadFile(filepath.Join(dir, ".gitignore"))
+	if !strings.Contains(string(data), "node_modules") {
+		t.Error(".gitignore for TypeScript should contain node_modules")
+	}
+}
+
 func TestCiTemplate(t *testing.T) {
 	tests := []struct {
 		lang string
