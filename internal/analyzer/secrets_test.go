@@ -64,6 +64,15 @@ func TestScanSecrets_SkipsLargeFiles(t *testing.T) {
 	}
 }
 
+func TestScanSecrets_SkipsTestFiles(t *testing.T) {
+	dir := t.TempDir()
+	os.WriteFile(filepath.Join(dir, "main_test.go"), []byte(`password = "supersecret123"`), 0o644)
+	findings := ScanSecrets(dir)
+	if len(findings) != 0 {
+		t.Error("should skip test files")
+	}
+}
+
 func TestIsBinaryExtension(t *testing.T) {
 	tests := []struct {
 		ext    string

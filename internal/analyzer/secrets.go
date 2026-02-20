@@ -51,6 +51,11 @@ func ScanSecrets(repoPath string) []SecretFinding {
 			return nil
 		}
 
+		// Skip test files (they may contain example secret patterns)
+		if strings.HasSuffix(rel, "_test.go") || strings.HasSuffix(rel, ".test.js") || strings.HasSuffix(rel, "_test.py") || strings.HasSuffix(rel, ".test.ts") {
+			return nil
+		}
+
 		// Skip binary and large files
 		if info.Size() > 1024*1024 { // 1MB
 			return nil

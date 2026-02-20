@@ -10,11 +10,8 @@ cmd/repokit/          — CLI entry point (cobra)
 internal/
   analyzer/           — Scans repo, collects facts (what files exist, languages detected, etc.)
   scorer/             — Takes analysis results, computes scores per category and overall
-  fixer/              — Generates missing files from templates
-  reporter/           — TUI display (Bubble Tea) + plain text output
-  github/             — GitHub API client for remote repo analysis
-  config/             — Configuration file support (.repokit.yaml)
-templates/            — Embedded Go templates for generated files
+  fixer/              — Generates missing files from embedded templates
+  reporter/           — TUI display (Bubble Tea) + plain text + JSON output
 ```
 
 ## Core Flow
@@ -139,13 +136,10 @@ Templates are embedded via Go embed. Each template is language-aware:
 
 ## CLI Commands (Cobra)
 - `repokit [path]` — Scan local repo (default: current dir), show TUI report
-- `repokit [github-url]` — Scan remote repo via GitHub API
-- `repokit --fix` — Auto-fix missing files (interactive selection)
+- `repokit --fix` — Auto-fix missing files
 - `repokit --fix --yes` — Auto-fix all without prompting
 - `repokit --format json` — Output as JSON (for CI integration)
 - `repokit --format text` — Plain text output (no TUI)
-- `repokit --category docs,ci` — Only check specific categories
-- `repokit compare <path1> <path2>` — Compare two repos
 - `repokit version` — Print version
 
 ## TUI Design (Bubble Tea + Lip Gloss)
@@ -195,9 +189,6 @@ Color coding:
 - cobra — CLI framework
 - bubbletea — TUI framework
 - lipgloss — TUI styling
-- bubbles — TUI components (progress bars, tables)
-- go-github — GitHub API client
-- yaml.v3 — Config parsing
 - embed — Template files (stdlib)
 
 ## Testing Strategy
