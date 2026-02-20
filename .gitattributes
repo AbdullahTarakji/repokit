@@ -1,0 +1,16 @@
+# Auto detect text files and perform LF normalization
+* text=auto
+
+# Go
+*.go text diff=golang
+go.sum text
+
+# Templates
+*.tmpl text
+
+# Markdown
+*.md text diff=markdown
+
+# Shell
+*.sh text eol=lf
+Makefile text eol=lf

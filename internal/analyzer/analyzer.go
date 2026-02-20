@@ -302,14 +302,14 @@ func containsAnyCI(s string, substrs ...string) bool {
 	return false
 }
 
-func calcDirSizeKB(path string) int64 {
+func calcDirSizeKB(root string) int64 {
 	var size int64
-	_ = filepath.Walk(path, func(_ string, info os.FileInfo, err error) error {
+	_ = filepath.Walk(root, func(p string, info os.FileInfo, err error) error {
 		if err != nil {
 			return nil
 		}
-		if strings.Contains(filepath.Dir(path), ".git") {
-			return nil
+		if info.IsDir() && filepath.Base(p) == ".git" {
+			return filepath.SkipDir
 		}
 		if !info.IsDir() {
 			size += info.Size()
