@@ -1,0 +1,24 @@
+# Security Policy
+
+## Reporting a Vulnerability
+
+If you discover a security vulnerability in repokit, please report it responsibly.
+
+**Please do NOT open a public issue.**
+
+Instead, send an email with details of the vulnerability. Include:
+
+1. Description of the vulnerability
+2. Steps to reproduce
+3. Potential impact
+4. Suggested fix (if any)
+
+## Supported Versions
+
+| Version | Supported |
+| ------- | --------- |
+| latest  | ✅        |
+
+## Security Updates
+
+Security updates will be released as patch versions and announced via GitHub releases.
