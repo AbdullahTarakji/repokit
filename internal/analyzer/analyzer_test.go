@@ -10,11 +10,17 @@ func setupTestRepo(t *testing.T, files map[string]string) string {
 	t.Helper()
 	dir := t.TempDir()
 	// Create .git dir to make it look like a repo
-	os.MkdirAll(filepath.Join(dir, ".git"), 0o755)
+	if err := os.MkdirAll(filepath.Join(dir, ".git"), 0o755); err != nil {
+		t.Fatal(err)
+	}
 	for name, content := range files {
 		path := filepath.Join(dir, name)
-		os.MkdirAll(filepath.Dir(path), 0o755)
-		os.WriteFile(path, []byte(content), 0o644)
+		if err := os.MkdirAll(filepath.Dir(path), 0o755); err != nil {
+			t.Fatal(err)
+		}
+		if err := os.WriteFile(path, []byte(content), 0o644); err != nil {
+			t.Fatal(err)
+		}
 	}
 	return dir
 }
@@ -95,8 +101,8 @@ func TestAnalyze_InvalidPath(t *testing.T) {
 
 func TestAnalyze_NotADirectory(t *testing.T) {
 	f, _ := os.CreateTemp("", "repokit-test")
-	f.Close()
-	defer os.Remove(f.Name())
+	_ = f.Close()
+	defer func() { _ = os.Remove(f.Name()) }()
 	_, err := Analyze(f.Name())
 	if err == nil {
 		t.Error("expected error for non-directory")
@@ -189,7 +195,7 @@ func TestAnalyze_LockFiles(t *testing.T) {
 
 func TestFileExistsAny(t *testing.T) {
 	dir := t.TempDir()
-	os.WriteFile(filepath.Join(dir, "README.md"), []byte("hi"), 0o644)
+	_ = os.WriteFile(filepath.Join(dir, "README.md"), []byte("hi"), 0o644)
 
 	if !fileExistsAny(dir, "README.md") {
 		t.Error("should find README.md")

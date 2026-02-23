@@ -56,8 +56,8 @@ func TestFix_CreatesMissingFiles(t *testing.T) {
 
 func TestFix_SkipsExistingFiles(t *testing.T) {
 	dir := t.TempDir()
-	os.WriteFile(filepath.Join(dir, "LICENSE"), []byte("existing"), 0o644)
-	os.WriteFile(filepath.Join(dir, ".gitignore"), []byte("existing"), 0o644)
+	_ = os.WriteFile(filepath.Join(dir, "LICENSE"), []byte("existing"), 0o644)
+	_ = os.WriteFile(filepath.Join(dir, ".gitignore"), []byte("existing"), 0o644)
 
 	result := &analyzer.AnalysisResult{
 		RepoPath:   dir,
@@ -92,7 +92,7 @@ func TestFix_LicenseContainsYear(t *testing.T) {
 		RepoName: "test",
 	}
 
-	Fix(result, dir)
+	_, _ = Fix(result, dir)
 	data, err := os.ReadFile(filepath.Join(dir, "LICENSE"))
 	if err != nil {
 		t.Fatal(err)
@@ -122,7 +122,7 @@ func TestFix_ContributingIsLanguageAware(t *testing.T) {
 				Languages: []string{tc.lang},
 			}
 
-			Fix(result, dir)
+			_, _ = Fix(result, dir)
 			data, _ := os.ReadFile(filepath.Join(dir, "CONTRIBUTING.md"))
 			if !strings.Contains(string(data), tc.contains) {
 				t.Errorf("CONTRIBUTING.md for %s should contain %q", tc.lang, tc.contains)
@@ -155,18 +155,18 @@ func TestFix_AllFilesExist(t *testing.T) {
 	dir := t.TempDir()
 
 	// Create all files that Fix would generate
-	os.WriteFile(filepath.Join(dir, "LICENSE"), []byte("x"), 0o644)
-	os.WriteFile(filepath.Join(dir, ".gitignore"), []byte("x"), 0o644)
-	os.WriteFile(filepath.Join(dir, "CONTRIBUTING.md"), []byte("x"), 0o644)
-	os.WriteFile(filepath.Join(dir, "CHANGELOG.md"), []byte("x"), 0o644)
-	os.WriteFile(filepath.Join(dir, "CODE_OF_CONDUCT.md"), []byte("x"), 0o644)
-	os.WriteFile(filepath.Join(dir, "SECURITY.md"), []byte("x"), 0o644)
-	os.WriteFile(filepath.Join(dir, ".editorconfig"), []byte("x"), 0o644)
-	os.MkdirAll(filepath.Join(dir, ".github", "workflows"), 0o755)
-	os.WriteFile(filepath.Join(dir, ".github", "workflows", "ci.yml"), []byte("x"), 0o644)
-	os.MkdirAll(filepath.Join(dir, ".github", "ISSUE_TEMPLATE"), 0o755)
-	os.WriteFile(filepath.Join(dir, ".github", "ISSUE_TEMPLATE", "bug_report.md"), []byte("x"), 0o644)
-	os.WriteFile(filepath.Join(dir, ".github", "pull_request_template.md"), []byte("x"), 0o644)
+	_ = os.WriteFile(filepath.Join(dir, "LICENSE"), []byte("x"), 0o644)
+	_ = os.WriteFile(filepath.Join(dir, ".gitignore"), []byte("x"), 0o644)
+	_ = os.WriteFile(filepath.Join(dir, "CONTRIBUTING.md"), []byte("x"), 0o644)
+	_ = os.WriteFile(filepath.Join(dir, "CHANGELOG.md"), []byte("x"), 0o644)
+	_ = os.WriteFile(filepath.Join(dir, "CODE_OF_CONDUCT.md"), []byte("x"), 0o644)
+	_ = os.WriteFile(filepath.Join(dir, "SECURITY.md"), []byte("x"), 0o644)
+	_ = os.WriteFile(filepath.Join(dir, ".editorconfig"), []byte("x"), 0o644)
+	_ = os.MkdirAll(filepath.Join(dir, ".github", "workflows"), 0o755)
+	_ = os.WriteFile(filepath.Join(dir, ".github", "workflows", "ci.yml"), []byte("x"), 0o644)
+	_ = os.MkdirAll(filepath.Join(dir, ".github", "ISSUE_TEMPLATE"), 0o755)
+	_ = os.WriteFile(filepath.Join(dir, ".github", "ISSUE_TEMPLATE", "bug_report.md"), []byte("x"), 0o644)
+	_ = os.WriteFile(filepath.Join(dir, ".github", "pull_request_template.md"), []byte("x"), 0o644)
 
 	result := &analyzer.AnalysisResult{
 		RepoPath:       dir,

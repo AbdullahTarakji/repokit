@@ -10,12 +10,6 @@ import (
 )
 
 var (
-	titleStyle = lipgloss.NewStyle().
-			Bold(true).
-			Foreground(lipgloss.Color("15")).
-			Background(lipgloss.Color("62")).
-			Padding(0, 1)
-
 	categoryStyle = lipgloss.NewStyle().Bold(true)
 
 	greenStyle  = lipgloss.NewStyle().Foreground(lipgloss.Color("10"))
@@ -97,7 +91,7 @@ func (m Model) View() string {
 			if check.Description != "" {
 				desc = check.Description
 			}
-			b.WriteString(fmt.Sprintf("   %s %s\n", icon, desc))
+			fmt.Fprintf(&b, "   %s %s\n", icon, desc)
 		}
 		b.WriteString("\n")
 	}

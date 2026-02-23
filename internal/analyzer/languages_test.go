@@ -55,8 +55,8 @@ func TestDetectLanguages(t *testing.T) {
 			dir := t.TempDir()
 			for name, content := range tc.files {
 				path := filepath.Join(dir, name)
-				os.MkdirAll(filepath.Dir(path), 0o755)
-				os.WriteFile(path, []byte(content), 0o644)
+				_ = os.MkdirAll(filepath.Dir(path), 0o755)
+				_ = os.WriteFile(path, []byte(content), 0o644)
 			}
 
 			got := DetectLanguages(dir)
